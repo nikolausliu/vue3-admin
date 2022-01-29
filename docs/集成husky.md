@@ -1,5 +1,5 @@
 ```sh
-yarn add husky @commitlint/cli @commitlint/config-conventional -D
+yarn add husky@4.3.8 @commitlint/cli@12.0.1 @commitlint/config-conventional@12.0.1 lint-staged@10.5.4 -D
 ```
 
 **package.json**
