@@ -10,14 +10,9 @@
     "lint": "eslint \"src/**/*.{vue,ts,tsx}\" --fix",
     "prettier": "prettier \"src/*\" -w -u"
   },
-  "lint-staged": {
-    "*.{ts,tsx,vue}": "eslint",
-    "*": "prettier -w -u"
-  },
   "husky": {
     "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "lint-staged"
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
   "dependencies": {
