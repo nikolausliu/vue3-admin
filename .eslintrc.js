@@ -24,6 +24,9 @@ module.exports = {
   },
   // 全局变量，这里一般放全局的ts类型声明，不然无法通过eslint的no-undef校验
   globals: {
+    ID: true,
+    Recordable: true,
+    PageResponse: true,
     defineProps: 'readonly',
     defineEmits: 'readonly',
     defineExpose: 'readonly',

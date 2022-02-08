@@ -1,0 +1,30 @@
+{
+  "id": "3171555",
+  "name": "vue3-admin",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "6496026",
+      "name": "Vue",
+      "font_class": "vue",
+      "unicode": "e799",
+      "unicode_decimal": 59289
+    },
+    {
+      "icon_id": "5434072",
+      "name": "菜单管理",
+      "font_class": "menu",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    },
+    {
+      "icon_id": "23412511",
+      "name": "promotion",
+      "font_class": "promotion",
+      "unicode": "e65e",
+      "unicode_decimal": 58974
+    }
+  ]
+}
