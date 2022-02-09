@@ -1,9 +1,9 @@
 import { RouteRecordRaw } from 'vue-router'
 import Layout from '@/layout/index.vue'
-import NotFound from '@/views/system/404.vue'
-import NoAuth from '@/views/system/403.vue'
-import Login from '@/views/system/Login.vue'
-import Redirect from '@/views/system/Redirect.vue'
+import NotFound from '@/views/constants/404.vue'
+import NoAuth from '@/views/constants/403.vue'
+import Login from '@/views/constants/Login.vue'
+import Redirect from '@/views/constants/Redirect.vue'
 
 const asyncRoutes: Array<RouteRecordRaw> = [
   {
