@@ -3,7 +3,7 @@
     <div class="login-box">
       <h1>
         <svg-icon class="icon" icon-class="ima-icon-logo-twotone"></svg-icon>
-        <span>讯飞商城管理系统</span>
+        <span>欢迎登录</span>
       </h1>
       <a-form ref="formRef" layout="vertical" :model="state.form" :rules="state.rules">
         <a-form-item name="userName">

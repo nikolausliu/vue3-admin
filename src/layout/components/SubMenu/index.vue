@@ -7,11 +7,11 @@
           :icon-class="menuRaw.icon"
           class="anticon menu-item-icon"
         ></svg-icon>
-        <span>{{ menuRaw.title }}</span>
+        <span>{{ menuRaw.menuName }}</span>
       </span>
     </template>
     <template v-for="item in menuRaw.children">
-      <a-menu-item v-if="item.children.length === 0" :key="item.path">{{ item.title }}</a-menu-item>
+      <a-menu-item v-if="item.children && item.children.length > 0 && item.children[0].menuType === 2" :key="item.path">{{ item.menuName }}</a-menu-item>
       <template v-else>
         <!-- 递归组件 -->
         <sub-menu :key="item.path" :menu-raw="item"></sub-menu>

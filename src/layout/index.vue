@@ -8,11 +8,8 @@
       collapsible
     >
       <div class="logo">
-        <!-- <svg-icon class="icon" icon-class="ima-icon-logo-twotone"></svg-icon> -->
-        <!-- <span>白泽管理系统</span> -->
-        <img :src="logo" class="logo-icon" alt="" />
-        <img :src="logoText" class="logo-text" alt="" />
-        <!-- <span>白泽中台</span> -->
+        <svg-icon class="icon" icon-class="icon-vue"></svg-icon>
+        <span>VUE3-ADMIN</span>
       </div>
       <div class="menu-wrap">
         <a-menu
@@ -22,13 +19,14 @@
           mode="inline"
           @click="handleMenuClick"
         >
-          <template v-for="item in menus">
-            <a-menu-item v-if="item.children.length === 0" :key="item.path">
+          <template v-for="item in menus" :key="item.path + 1">
+            <!-- <a-menu-item v-if="item.children.length === 0" :key="item.path">
               <svg-icon :icon-class="item.icon" class="anticon menu-item-icon"></svg-icon>
               <span>{{ item.title }}</span>
-            </a-menu-item>
+            </a-menu-item> -->
             <!-- `:key="item.path + 1"` solve issue `v-if/else branches must use unique keys. vue(29)` -->
-            <sub-menu v-else :key="item.path + 1" :menu-raw="item"></sub-menu>
+            <!-- <sub-menu v-else :key="item.path + 1" :menu-raw="item"></sub-menu> -->
+            <sub-menu :menu-raw="item"></sub-menu>
           </template>
         </a-menu>
       </div>

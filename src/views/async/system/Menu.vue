@@ -203,16 +203,6 @@ const table = reactive({
 const modal = reactive({
   visible: false,
   action: 'add', // add | edit
-  form: {
-    parentId: [],
-    menuType: 1,
-    menuName: '',
-    menuCode: '',
-    icon: '',
-    path: '',
-    component: '',
-    menuState: 1,
-  },
   rules: {
     menuName: [{ required: true, message: '请输入菜单名称' }],
   },
@@ -250,7 +240,7 @@ const handleAdd = (type: 1 | 2, record: Recordable = {}) => {
   modal.visible = true
   modal.action = 'add'
   if (type === 2) {
-    modalForm.parentId = [...record.parentId, record._id].filter((item) => item)
+    modalForm.value.parentId = [...record.parentId, record._id].filter((item) => item)
   }
 }
 

@@ -25,8 +25,8 @@ service.interceptors.response.use(
   (res: AxiosResponse) => {
     console.log('res', res)
     console.log('router', router)
-    if (res.data.code !== ResponseCode.Success) {
-      if (res.data.code === ResponseCode.InvalidToken) {
+    if (res.data.code !== ResponseCode.SUCCESS) {
+      if (res.data.code === ResponseCode.AUTH_ERROR) {
         // 清空localstorage & 跳登录页
         const { fullPath } = router.currentRoute.value
         const to: RouteLocationRaw = {

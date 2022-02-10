@@ -1,6 +1,6 @@
 import { defineStore, storeToRefs } from 'pinia'
 import { pinia } from '../index'
-import { menus } from '@/router/menus'
+import menus from '@/router/menus'
 // import { isProd } from '@/utils/env'
 import { STORAGE, STORAGE_KEY_MENUS } from '../enums'
 import { initStorageWithState, updateStorage } from '../utils'
