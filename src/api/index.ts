@@ -11,35 +11,35 @@ export default {
     return request({
       url: '/leave/count',
       method: 'get',
-      data: {},
+      params: {},
     })
   },
   getMenuList(params: Recordable) {
     return request({
       url: '/menus/list',
       method: 'get',
-      data: params,
+      params,
     })
   },
   getPermissionList() {
     return request({
       url: '/users/getPermissionList',
       method: 'get',
-      data: {},
+      params: {},
     })
   },
   getUserList(params: Recordable) {
     return request({
       url: '/users/list',
       method: 'get',
-      data: params,
+      params,
     })
   },
   getAllUserList() {
     return request({
       url: '/users/all/list',
       method: 'get',
-      data: {},
+      params: {},
     })
   },
   userDel(params: Recordable) {
@@ -53,21 +53,21 @@ export default {
     return request({
       url: '/roles/allList',
       method: 'get',
-      data: {},
+      params: {},
     })
   },
   getRoleList(params: Recordable) {
     return request({
       url: '/roles/list',
       method: 'get',
-      data: params,
+      params,
     })
   },
   getDeptList(params: Recordable) {
     return request({
       url: '/dept/list',
       method: 'get',
-      data: params,
+      params,
     })
   },
   deptOperate(params: Recordable) {
@@ -109,7 +109,7 @@ export default {
     return request({
       url: '/leave/list',
       method: 'get',
-      data: params,
+      params,
     })
   },
   leaveOperate(params: Recordable) {
