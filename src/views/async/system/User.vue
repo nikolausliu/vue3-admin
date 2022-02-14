@@ -51,7 +51,7 @@
           :pagination="false"
           :scroll="{ x: true }"
           size="small"
-          row-key="_id"
+          row-key="userId"
         >
           <template #role="{ record }">
             {{ roleMap[record.role] }}
@@ -275,7 +275,7 @@ const modal = reactive({
   action: 'add', // add | edit
   rules: {
     userName: [{ required: true, message: '请输入用户名' }],
-    userEmail: [{ required: true, message: '请输入用户名' }],
+    userEmail: [{ required: true, message: '请输入用户邮箱' }],
     deptId: [{ required: true, type: 'array', message: '请选择部门' }],
   },
   submitLoading: false,

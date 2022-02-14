@@ -140,51 +140,43 @@ const columns = [
   {
     key: 'menuName',
     dataIndex: 'menuName',
-    align: 'center',
     title: '菜单名称',
+    width: '200px',
   },
   {
     key: 'icon',
     dataIndex: 'icon',
-    align: 'center',
     title: '图标',
   },
   {
     key: 'menuType',
     dataIndex: 'menuType',
-    align: 'center',
     title: '菜单类型',
   },
   {
     key: 'menuCode',
     dataIndex: 'menuCode',
-    align: 'center',
     title: '权限标志',
   },
   {
     key: 'path',
     dataIndex: 'path',
-    align: 'center',
     title: '路由地址',
   },
   {
     key: 'component',
     dataIndex: 'component',
-    align: 'center',
     title: '组件路径',
   },
   {
     key: 'menuState',
     dataIndex: 'menuState',
-    align: 'center',
     title: '菜单状态',
   },
   {
     key: 'action',
     title: '操作',
-    align: 'center',
     width: 150,
-    fixed: 'right',
     slots: { customRender: 'action' },
   },
 ]
