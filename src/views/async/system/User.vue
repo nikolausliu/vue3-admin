@@ -35,7 +35,9 @@
     <div class="base-table">
       <div class="action group-btn-wrap">
         <a-button type="primary" @click="handleAdd">新增</a-button>
-        <a-button danger :disabled="!checkedUserIds.length" @click="handleAdd">批量删除</a-button>
+        <a-button danger :disabled="!checkedUserIds.length" @click="handlePatchDelete"
+          >批量删除</a-button
+        >
       </div>
       <a-config-provider>
         <template #renderEmpty>
@@ -66,13 +68,83 @@
                 cancel-text="否"
                 @confirm="handleDelete(record)"
               >
-                <a-button size="small" danger @click="handleDelete(record)">删除</a-button>
+                <a-button size="small" danger>删除</a-button>
               </a-popconfirm>
             </span>
           </template>
         </a-table>
       </a-config-provider>
     </div>
+
+    <a-modal
+      v-model:visible="modal.visible"
+      :title="`${modal.action === 'add' ? '新增' : '编辑'}用户`"
+      :mask-closable="false"
+      :footer="null"
+      width="500px"
+      @cancel="handleClose"
+    >
+      <a-form :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
+        <a-form-item label="用户名" v-bind="validateInfos.userName">
+          <a-input
+            v-model:value="modalForm.userName"
+            placeholder="请输入用户名"
+            allow-clear
+            :disabled="modal.action === 'edit'"
+          >
+          </a-input>
+        </a-form-item>
+        <a-form-item label="邮箱" v-bind="validateInfos.userEmail">
+          <a-input
+            v-model:value="modalForm.userEmail"
+            placeholder="邮箱"
+            allow-clear
+            :disabled="modal.action === 'edit'"
+          >
+          </a-input>
+        </a-form-item>
+        <a-form-item label="手机号" v-bind="validateInfos.mobile">
+          <a-input v-model:value="modalForm.mobile" placeholder="手机号" allow-clear> </a-input>
+        </a-form-item>
+        <a-form-item label="岗位" v-bind="validateInfos.job">
+          <a-input v-model:value="modalForm.job" placeholder="岗位" allow-clear> </a-input>
+        </a-form-item>
+        <a-form-item label="状态" v-bind="validateInfos.state">
+          <a-radio-group v-model:value="modalForm.state">
+            <a-radio :value="1">在职</a-radio>
+            <a-radio :value="2">离职</a-radio>
+            <a-radio :value="3">试用期</a-radio>
+          </a-radio-group>
+        </a-form-item>
+        <a-form-item label="系统角色" v-bind="validateInfos.roleList">
+          <a-select
+            v-model:value="modalForm.roleList"
+            mode="multiple"
+            placeholder="请选择系统角色"
+            allow-clear
+          >
+            <a-select-option v-for="role in roleList" :key="role._id" :value="role._id">{{
+              role.roleName
+            }}</a-select-option>
+          </a-select>
+        </a-form-item>
+        <a-form-item label="部门" v-bind="validateInfos.deptId">
+          <a-cascader
+            v-model:value="modalForm.deptId"
+            placeholder="请选择部门"
+            :options="deptList"
+            :field-names="{ label: 'deptName', value: '_id' }"
+            change-on-select
+            allow-clear
+          />
+        </a-form-item>
+        <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
+          <a-button type="primary" :loading="modal.submitLoading" @click="handleSubmit">
+            确定
+          </a-button>
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </div>
 </template>
 
@@ -170,6 +242,33 @@ const table = reactive({
   error: false,
   total: 0,
 })
+const fetchTable = () => {
+  table.loading = true
+  api
+    .getUserList(queryForm.value)
+    .then((res) => {
+      table.list = res.data.data.list
+      table.total = res.data.data.page.toal
+      table.loading = false
+      table.error = false
+    })
+    .catch(() => {
+      table.list = []
+      tabel.total = 0
+      tabel.loading = false
+      table.error = true
+    })
+}
+const deptList = ref<Recordable[]>([])
+const fetchDeptList = async () => {
+  const res = await api.getDeptList()
+  deptList.value = res.data.data
+}
+const roleList = ref<Recordable[]>([])
+const fetchRoleList = async () => {
+  const res = await api.getRoleAllList()
+  roleList.value = res.data.data
+}
 
 const modal = reactive({
   visible: false,
@@ -190,23 +289,10 @@ const modalForm = ref<Recordable>({
   roleList: [],
   deptId: [],
 })
-
-const fetchTable = () => {
-  table.loading = true
-  api
-    .getUserList(queryForm.value)
-    .then((res) => {
-      table.list = res.data.data.list
-      table.total = res.data.data.page.toal
-      table.loading = false
-      table.error = false
-    })
-    .catch(() => {
-      table.list = []
-      tabel.total = 0
-      table.loading = false
-      table.error = true
-    })
+const { resetFields, validate, validateInfos } = Form.useForm(modalForm, modal.rules)
+const handleClose = () => {
+  modal.visible = false
+  resetFields()
 }
 
 const handleAdd = () => {
@@ -215,36 +301,51 @@ const handleAdd = () => {
 }
 
 const handleEdit = (record: Recordable) => {
-  // modal.visible = true
-  // modal.action = 'edit'
-  // // modalForm.value = { ...record }
-  // modalForm.value = {
-  //   _id: record._id,
-  //   parentId: record.parentId,
-  //   menuType: record.menuType,
-  //   menuName: record.menuName,
-  //   menuCode: record.menuCode,
-  //   icon: record.icon,
-  //   path: record.path,
-  //   component: record.component,
-  //   menuState: record.menuState,
-  // }
-  // if (modalForm.value.parentId && modalForm.value.parentId[0] === null) {
-  //   modalForm.value.parentId = []
-  // }
+  modal.visible = true
+  modal.action = 'edit'
+  modalForm.value = { ...record }
 }
 
-const handleDelete = (record: Recordable) => {
-  // api
-  //   .menuSubmit({ _id: record._id, action: 'delete' })
-  //   .then((res) => {
-  //     message.success('删除成功')
-  //     fetchTable()
-  //   })
-  //   .catch(() => {})
+const handleDelete = async (record: Recordable) => {
+  const res = await api.userDel({
+    userIds: [record.userId],
+  })
+  message.success('删除成功')
+  fetchTable()
+}
+const handlePatchDelete = async () => {
+  const res = await api.userDel({
+    userIds: checkedUserIds.value,
+  })
+  console.log(res)
+  if (res.data.data.nModified > 0) {
+    message.success('删除成功')
+    fetchTable()
+  }
+}
+
+const handleSubmit = () => {
+  validate()
+    .then(async () => {
+      modal.submitLoading = true
+      const params = {
+        action: modal.action,
+        ...modalForm.value,
+      }
+      await api.userSubmit(params)
+      modal.submitLoading = false
+      message.success('操作成功')
+      handleClose()
+      fetchTable()
+    })
+    .catch((err) => {
+      console.log(err)
+    })
 }
 
 fetchTable()
+fetchDeptList()
+fetchRoleList()
 </script>
 
 <script lang="ts">

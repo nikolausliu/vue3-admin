@@ -65,14 +65,14 @@ export default {
   },
   getDeptList(params: Recordable) {
     return request({
-      url: '/dept/list',
+      url: '/depts/list',
       method: 'get',
       params,
     })
   },
   deptOperate(params: Recordable) {
     return request({
-      url: '/dept/operate',
+      url: '/depts/operate',
       method: 'post',
       data: params,
     })
