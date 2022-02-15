@@ -74,6 +74,15 @@
           </template>
         </a-table>
       </a-config-provider>
+      <div v-if="table.total" class="pagination-wrap">
+        <base-pagination
+          v-model:current="queryForm.pageNum"
+          v-model:pageSize="queryForm.pageSize"
+          :total="table.total"
+          @change="fetchTable"
+          @showSizeChange="fetchTable"
+        />
+      </div>
     </div>
 
     <a-modal
@@ -248,7 +257,7 @@ const fetchTable = () => {
     .getUserList(queryForm.value)
     .then((res) => {
       table.list = res.data.data.list
-      table.total = res.data.data.page.toal
+      table.total = res.data.data.page.total
       table.loading = false
       table.error = false
     })

@@ -33,6 +33,7 @@ import {
   Spin,
   Tooltip,
   Tag,
+  Tree,
 } from 'ant-design-vue'
 import {
   SearchOutlined,
@@ -98,6 +99,7 @@ export function installAnt(app: App): App {
   app.use(Spin)
   app.use(Tooltip)
   app.use(Tag)
+  app.use(Tree)
   // icons
   app.component(SearchOutlined.displayName, SearchOutlined)
   app.component(EditOutlined.displayName, EditOutlined)
