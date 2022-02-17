@@ -136,8 +136,8 @@ export default defineComponent({
     const loadAsyncRoutes = (menuList: Recordable[]) => {
       if (userStore.token) {
         const routes = generateRoute(JSON.parse(JSON.stringify(menuList)))
-        console.log('routes', routes, menuList)
         routes.forEach((route) => {
+          // https://github.com/rollup/plugins/tree/master/packages/dynamic-import-vars#limitations
           const url = `./../async/${route.component}.vue`
           route.component = () => import(url)
           router.addRoute('home', route)
