@@ -49,9 +49,11 @@ import { defineComponent, reactive, ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
-import { getFirstRoutePath } from '@/utils'
+import { getFirstRoutePath, generateRoute } from '@/utils'
 import md5 from 'md5'
 import { useUserStore } from '@/pinia/modules/user'
+import { useMenusStore } from '@/pinia/modules/menus'
+import api from '@/api'
 
 export default defineComponent({
   name: 'Login',
@@ -63,7 +65,8 @@ export default defineComponent({
 
   setup() {
     const userStore = useUserStore()
-    const { replace } = useRouter()
+    const menusStore = useMenusStore()
+    const router = useRouter()
     const { query } = useRoute()
 
     const state = reactive({
@@ -92,14 +95,21 @@ export default defineComponent({
             userPwd: md5(state.form.userPwd),
           }
           await userStore.login(params)
+          try {
+            const { menuList, actionList } = await loadPermissions()
+            updateMenu(menuList, actionList)
+            loadAsyncRoutes(menuList)
+          } catch (e) {
+            console.log(e)
+          }
           const { redirect } = query
           const firstRoutePath = getFirstRoutePath()
           if (redirect) {
-            replace({
+            router.replace({
               path: (redirect as string) || firstRoutePath,
             })
           } else {
-            replace({
+            router.replace({
               path: firstRoutePath,
             })
           }
@@ -113,11 +123,35 @@ export default defineComponent({
         })
     }
 
+    const loadPermissions = async () => {
+      const res = await api.getPermissionList()
+      return res.data.data
+    }
+
+    const updateMenu = (menuList: Recordable[], actionList: string[]) => {
+      menusStore.setMenus(menuList)
+      menusStore.setActions(actionList)
+    }
+
+    const loadAsyncRoutes = (menuList: Recordable[]) => {
+      if (userStore.token) {
+        const routes = generateRoute(JSON.parse(JSON.stringify(menuList)))
+        console.log('routes', routes, menuList)
+        routes.forEach((route) => {
+          const url = `./../async/${route.component}.vue`
+          route.component = () => import(url)
+          router.addRoute('home', route)
+        })
+      }
+    }
+
     return {
       state,
       formRef,
       disabled,
       handleSubmit,
+      loadPermissions,
+      updateMenu,
     }
   },
 })

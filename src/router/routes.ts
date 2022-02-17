@@ -12,10 +12,11 @@ const asyncRoutes: Array<RouteRecordRaw> = [
     meta: {
       title: '系统管理',
     },
+    name: 'system',
     children: [
       {
         path: 'menu',
-        name: 'Menu',
+        name: 'menu',
         component: () => import('@/views/async/system/Menu.vue'),
         meta: {
           title: '菜单管理',
@@ -23,7 +24,7 @@ const asyncRoutes: Array<RouteRecordRaw> = [
       },
       {
         path: 'user',
-        name: 'User',
+        name: 'user',
         component: () => import('@/views/async/system/User.vue'),
         meta: {
           title: '用户管理',
@@ -31,7 +32,7 @@ const asyncRoutes: Array<RouteRecordRaw> = [
       },
       {
         path: 'role',
-        name: 'Role',
+        name: 'role',
         component: () => import('@/views/async/system/Role.vue'),
         meta: {
           title: '角色管理',
@@ -39,7 +40,7 @@ const asyncRoutes: Array<RouteRecordRaw> = [
       },
       {
         path: 'dept',
-        name: 'Dept',
+        name: 'dept',
         component: () => import('@/views/async/system/Dept.vue'),
         meta: {
           title: '部门管理',
@@ -53,10 +54,11 @@ const asyncRoutes: Array<RouteRecordRaw> = [
     meta: {
       title: '审批管理',
     },
+    name: 'audit',
     children: [
       {
         path: 'leave',
-        name: 'Leave',
+        name: 'leave',
         component: () => import('@/views/async/audit/Leave.vue'),
         meta: {
           title: '休假申请',
@@ -64,7 +66,7 @@ const asyncRoutes: Array<RouteRecordRaw> = [
       },
       {
         path: 'approve',
-        name: 'Approve',
+        name: 'approve',
         component: () => import('@/views/async/audit/Approve.vue'),
         meta: {
           title: '待我审批',
@@ -75,7 +77,26 @@ const asyncRoutes: Array<RouteRecordRaw> = [
 ]
 
 export const routes: Array<RouteRecordRaw> = [
-  ...asyncRoutes,
+  // ...asyncRoutes,
+  {
+    path: '/',
+    name: 'home',
+    component: Layout,
+    redirect: '/welcome',
+    meta: {
+      title: '首页',
+    },
+    children: [
+      {
+        path: 'welcome',
+        name: 'welcome',
+        component: () => import('@/views/constants/Welcome.vue'),
+        meta: {
+          title: '欢迎使用Vue3-admin',
+        },
+      },
+    ],
+  },
   {
     path: '/exception',
     name: 'exception',

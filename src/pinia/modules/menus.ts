@@ -1,11 +1,11 @@
 import { defineStore, storeToRefs } from 'pinia'
 import { pinia } from '../index'
-import menus from '@/router/menus'
+// import menus from '@/router/menus'
 // import { isProd } from '@/utils/env'
 import { STORAGE, STORAGE_KEY_MENUS } from '../enums'
 import { initStorageWithState, updateStorage } from '../utils'
 
-type Menus = typeof menus
+// type Menus = typeof menus
 
 const useStore = defineStore('menus', {
   state: () => {
@@ -13,28 +13,34 @@ const useStore = defineStore('menus', {
       // 开发环境使用本地模拟的menus，方便开发新菜单
       // 生产环境使用接口返回的menus(详见 ./user action)
       // menus: isProd() ? [] : menus,
-      menus,
+      menus: [] as Recordable[],
+      actions: [] as string[],
       selected: [] as string[],
       opened: [] as string[],
     }
-    return state
-    // return initStorageWithState(STORAGE, STORAGE_KEY_MENUS, state)
+    // return state
+    return initStorageWithState(STORAGE, STORAGE_KEY_MENUS, state)
   },
 
   actions: {
-    setMenus(payload: Menus) {
+    setMenus(payload: Recordable[]) {
       this.menus = payload
-      // updateStorage(STORAGE, STORAGE_KEY_MENUS, 'menus', payload)
+      updateStorage(STORAGE, STORAGE_KEY_MENUS, 'menus', payload)
+    },
+
+    setActions(payload: string[]) {
+      this.actions = payload
+      updateStorage(STORAGE, STORAGE_KEY_MENUS, 'actions', payload)
     },
 
     setSelected(payload: string[]) {
       this.selected = payload
-      // updateStorage(STORAGE, STORAGE_KEY_MENUS, 'selected', payload)
+      updateStorage(STORAGE, STORAGE_KEY_MENUS, 'selected', payload)
     },
 
     setOpened(payload: string[]) {
       this.opened = payload
-      // updateStorage(STORAGE, STORAGE_KEY_MENUS, 'opened', payload)
+      updateStorage(STORAGE, STORAGE_KEY_MENUS, 'opened', payload)
     },
   },
 

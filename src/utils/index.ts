@@ -2,6 +2,7 @@
 // import { useMenusStore } from '@/pinia/modules/menus'
 // import { MenuRaw } from '@/router/menus'
 import { AxiosResponse } from 'axios'
+import { RouteRecordRaw } from 'vue-router'
 
 // @TODO: children使用动态属性
 export interface NestedObj<T> {
@@ -173,4 +174,28 @@ export function forceCloseModalWrap(selectorIndex = 0) {
   ;[].forEach.call(document.querySelectorAll(selectors[selectorIndex]), (item) => {
     ;(item as HTMLElement).style.display = 'none'
   })
+}
+
+export function generateRoute(menuList: Recordable[]) {
+  const routes: RouteRecordRaw[] = []
+  const deepList = (list: Recordable[]) => {
+    while (list.length) {
+      const item = list.pop() as Recordable
+      if (item.action) {
+        routes.push({
+          name: item.component,
+          path: item.path,
+          meta: {
+            title: item.menuName,
+          },
+          component: item.component,
+        })
+      }
+      if (item.children && !item.action) {
+        deepList(item.children)
+      }
+    }
+  }
+  deepList(menuList)
+  return routes
 }
