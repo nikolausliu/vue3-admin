@@ -76,9 +76,6 @@ import useOpenKeys from '@/hooks/menus/useOpenKeys'
 import useMenuClick from '@/hooks/menus/useMenuClick'
 import useAppBack from '@/hooks/menus/useAppBack'
 import { useRefresh } from '@/hooks/usePage'
-// assets
-import logo from '@/assets/imgs/logo.png'
-import logoText from '@/assets/imgs/logo-text.png'
 
 const menusStore = useMenusStore()
 const menus = menusStore.menus

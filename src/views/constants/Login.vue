@@ -2,7 +2,6 @@
   <div class="login">
     <div class="login-box">
       <h1>
-        <svg-icon class="icon" icon-class="ima-icon-logo-twotone"></svg-icon>
         <span>欢迎登录</span>
       </h1>
       <a-form ref="formRef" layout="vertical" :model="state.form" :rules="state.rules">
@@ -36,8 +35,9 @@
             :disabled="disabled"
             :loading="state.submitLoading"
             @click="handleSubmit"
-            >登录</a-button
           >
+            登录
+          </a-button>
         </a-form-item>
       </a-form>
     </div>
