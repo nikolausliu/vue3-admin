@@ -47,6 +47,10 @@ export function generateRoute(menuList: Recordable[]) {
   return routes
 }
 
+export function getKeys<T extends object>(obj: T) {
+  return Object.keys(obj) as Array<keyof T>
+}
+
 export function formateDate(date: Date, rule: string): string {
   let fmt = rule || 'yyyy-MM-dd hh:mm:ss'
   if (/(y+)/.test(fmt)) {
@@ -59,8 +63,7 @@ export function formateDate(date: Date, rule: string): string {
     'm+': date.getMinutes(),
     's+': date.getSeconds(),
   }
-  const keys = Object.keys(o) as Array<keyof typeof o>
-  keys.forEach((k) => {
+  getKeys(o).forEach((k) => {
     if (new RegExp(`(${k})`).test(fmt)) {
       const val = o[k] + ''
       fmt = fmt.replace(RegExp.$1, RegExp.$1.length === 1 ? val : ('00' + val).substr(val.length))

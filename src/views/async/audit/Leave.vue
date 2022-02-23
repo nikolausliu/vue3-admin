@@ -22,7 +22,7 @@
 
     <div class="base-table">
       <div class="action group-btn-wrap">
-        <a-button type="primary">申请休假</a-button>
+        <a-button type="primary" @click="handleCreate">申请休假</a-button>
       </div>
       <a-config-provider>
         <template #renderEmpty>
@@ -67,13 +67,51 @@
         />
       </div>
     </div>
+
+    <a-modal
+      v-model:visible="modal.visible"
+      title="申请休假"
+      :mask-closable="false"
+      :footer="null"
+      width="500px"
+      @cancel="handleClose"
+    >
+      <a-form :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
+        <a-form-item label="休假类型" v-bind="validateInfos.applyType">
+          <a-select v-model:value="modalForm.applyType" placeholder="请选择休假类型">
+            <a-select-option v-for="item in applyTypeArr" :key="item.value" :value="item.value">{{
+              item.name
+            }}</a-select-option>
+          </a-select>
+        </a-form-item>
+        <a-form-item label="休假时间" v-bind="validateInfos.leaveTime">
+          <range-picker
+            v-model:start="modalForm.startTime"
+            v-model:end="modalForm.endTime"
+            :show-time="false"
+            format="YYYY-MM-DD"
+            @change="handleTimeChange"
+          />
+        </a-form-item>
+        <a-form-item label="休假时长" v-bind="validateInfos.leaveTime">
+          {{ modalForm.leaveTime }}
+        </a-form-item>
+        <a-form-item label="休假原因" v-bind="validateInfos.reasons">
+          <a-textarea v-model:value="modalForm.reasons" placeholder="请输入休假原因" allow-clear />
+        </a-form-item>
+        <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
+          <a-button type="primary" :loading="modal.submitLoading" @click="handleSubmit">
+            确定
+          </a-button>
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
 import { Form, message } from 'ant-design-vue'
-import { ColumnProps } from 'ant-design-vue/es/table/interface'
 import api from '@/api'
 import { formateDate } from '@/utils'
 
@@ -186,6 +224,68 @@ const fetchTable = () => {
       tabel.total = 0
       tabel.loading = false
       table.error = true
+    })
+}
+
+const modal = reactive({
+  visible: false,
+  action: 'create', // create | edit
+  rules: {
+    applyType: [{ required: true, message: '请选择休假类型' }],
+    startTime: [{ required: true, message: '请选择休假时间' }],
+    leaveTime: [{ required: true, message: '请选择休假时间' }],
+    reasons: [{ required: true, message: '请输入休假原因' }],
+  },
+  submitLoading: false,
+})
+const modalForm = ref<Recordable>({
+  applyType: 1,
+  startTime: '',
+  endTime: '',
+  leaveTime: '0天',
+  reasons: '',
+})
+const { resetFields, validate, validateInfos } = Form.useForm(modalForm, modal.rules)
+const handleClose = () => {
+  modal.visible = false
+  resetFields()
+}
+const handleCreate = () => {
+  modal.visible = true
+  modal.action = 'create'
+}
+const handleDelete = async (record: Recordable) => {
+  const res = await api.leaveOperate({
+    action: 'delete',
+    _id: record._id,
+  })
+  message.success('删除成功')
+  fetchTable()
+}
+const handleTimeChange = (date: string[]) => {
+  if (date.length) {
+    modalForm.value.leaveTime =
+      (new Date(date[1]).getTime() - new Date(date[0]).getTime()) / (24 * 60 * 60 * 1000) + 1 + '天'
+  } else {
+    modalForm.value.leaveTime = '0天'
+  }
+}
+const handleSubmit = () => {
+  validate()
+    .then(async () => {
+      modal.submitLoading = true
+      const params = {
+        action: modal.action,
+        ...modalForm.value,
+      }
+      await api.leaveOperate(params)
+      modal.submitLoading = false
+      message.success('操作成功')
+      handleClose()
+      fetchTable()
+    })
+    .catch((err) => {
+      console.log(err)
     })
 }
 
