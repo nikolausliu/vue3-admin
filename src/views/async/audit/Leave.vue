@@ -49,7 +49,7 @@
           </template>
           <template #action="{ record }">
             <span class="group-btn-wrap">
-              <a-button type="primary" size="small">查看</a-button>
+              <a-button type="primary" size="small" @click="handleDetail(record)">详情</a-button>
               <a-popconfirm title="确定要删除吗?" ok-text="是" cancel-text="否">
                 <a-button size="small" danger>作废</a-button>
               </a-popconfirm>
@@ -106,6 +106,32 @@
         </a-form-item>
       </a-form>
     </a-modal>
+
+    <a-modal
+      v-model:visible="detail.visible"
+      title="休假详情"
+      :mask-closable="false"
+      :footer="null"
+      width="500px"
+    >
+      <a-steps
+        :current="detail.data.applyState > 2 ? 2 : detail.data.applyState - 1"
+        progress-dot
+        style="margin-bottom: 20px"
+      >
+        <a-step title="待审批"></a-step>
+        <a-step title="审批中"></a-step>
+        <a-step title="审批通过/审批拒绝"></a-step>
+      </a-steps>
+      <a-form :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
+        <a-form-item label="休假类型">{{ detail.data.applyTypeName }}</a-form-item>
+        <a-form-item label="休假时间">{{ detail.data.timeRange }}</a-form-item>
+        <a-form-item label="休假时长">{{ detail.data.leaveTime }}</a-form-item>
+        <a-form-item label="休假原因">{{ detail.data.reasons }}</a-form-item>
+        <a-form-item label="审批状态">{{ detail.data.applyStateName }}</a-form-item>
+        <a-form-item label="审批人">{{ detail.data.auditUsers }}</a-form-item>
+      </a-form>
+    </a-modal>
   </div>
 </template>
 
@@ -123,11 +149,10 @@ const columns = [
     title: '单号',
   },
   {
-    key: 'startTime',
-    dataIndex: 'startTime',
+    key: 'timeRange',
+    dataIndex: 'timeRange',
     align: 'center',
     title: '休假时间',
-    slots: { customRender: 'startTime' },
   },
   {
     key: 'leaveTime',
@@ -136,11 +161,10 @@ const columns = [
     title: '休假时长',
   },
   {
-    key: 'applyType',
-    dataIndex: 'applyType',
+    key: 'applyTypeName',
+    dataIndex: 'applyTypeName',
     align: 'center',
     title: '休假类型',
-    slots: { customRender: 'applyType' },
   },
   {
     key: 'reasons',
@@ -168,11 +192,10 @@ const columns = [
     title: '当前审批人',
   },
   {
-    key: 'applyState',
-    dataIndex: 'applyState',
+    key: 'applyStateName',
+    dataIndex: 'applyStateName',
     align: 'center',
     title: '审批状态',
-    slots: { customRender: 'applyState' },
   },
   {
     key: 'action',
@@ -214,7 +237,16 @@ const fetchTable = () => {
   api
     .getApplyList(queryForm.value)
     .then((res) => {
-      table.list = res.data.data.list
+      const list = (res.data.data.list as Recordable[]).map((item) => {
+        item.applyTypeName = applyTypeArr.find((v) => v.value === item.applyType)?.name || ''
+        item.applyStateName = applyStateArr.find((v) => v.value === item.applyState)?.name || ''
+        item.timeRange =
+          formateDate(new Date(item.startTime), 'yyyy-MM-dd') +
+          ' ~ ' +
+          formateDate(new Date(item.endTime), 'yyyy-MM-dd')
+        return item
+      })
+      table.list = list
       table.total = res.data.data.page.total
       table.loading = false
       table.error = false
@@ -287,6 +319,23 @@ const handleSubmit = () => {
     .catch((err) => {
       console.log(err)
     })
+}
+
+const detail = reactive({
+  visible: false,
+  data: {} as Recordable,
+})
+const handleDetail = (record: Recordable) => {
+  detail.visible = true
+  detail.data = { ...record }
+  // detail.data.applyTypeName =
+  //   applyTypeArr.find((item) => item.value === detail.data.applyType)?.name || ''
+  // detail.data.applyStateName =
+  //   applyTypeArr.find((item) => item.value === detail.data.applyState)?.name || ''
+  // detail.data.rangeTime =
+  //   formateDate(new Date(record.startTime), 'yyyy-MM-dd') +
+  //   ' ~ ' +
+  //   formateDate(new Date(record.endTime), 'yyyy-MM-dd')
 }
 
 fetchTable()
