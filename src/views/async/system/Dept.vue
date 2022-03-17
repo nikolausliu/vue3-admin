@@ -160,7 +160,7 @@ const fetchTable = () => {
     })
     .catch(() => {
       table.list = []
-      tabel.loading = false
+      table.loading = false
       table.error = true
     })
 }

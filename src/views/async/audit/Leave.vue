@@ -253,8 +253,8 @@ const fetchTable = () => {
     })
     .catch(() => {
       table.list = []
-      tabel.total = 0
-      tabel.loading = false
+      table.total = 0
+      table.loading = false
       table.error = true
     })
 }
